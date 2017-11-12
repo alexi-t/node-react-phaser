@@ -5,7 +5,7 @@ import * as Phaser from 'phaser-ce';
 import React, { Component } from 'react';
 import './game.css';
 import tooloud from 'tooloud';
-import { TerrainType } from '../../game/utils/terrainType';
+import { TerrainType } from '../../game/constants';
 import TextureGenerator from '../../game/utils/textureGenerator';
 
 class GameComponent extends Component {

@@ -1,5 +1,4 @@
 import tooloud from 'tooloud';
-import { TerrainType } from './terrainType'
 import * as Phaser from 'phaser-ce';
 
 const width = 128;
