@@ -17,8 +17,10 @@ class TextureGenerator {
             if (terrainTypes.hasOwnProperty(terrainType)) {
                 var type = terrainTypes[terrainType];
                 types.push(type);
+                this._generateSolid(type);
             }
         }
+        return;
         for (var i = 0; i < types.length; i++) {
             for (var j = 0; j < types.length; j++) {
                 if (i == j)
@@ -30,6 +32,16 @@ class TextureGenerator {
                 }
             }
         }
+    }
+
+    _generateSolid(terrain) {
+        let bmd = this.game.add.bitmapData(width, height);
+        let ctx = bmd.ctx;
+        let color = terrain.color;
+        ctx.fillStyle = `rgb(${color.r},${color.g}, ${color.b})`;
+        ctx.fillRect(0, 0, width, height);
+        this.game.cache.addBitmapData(`${terrain.shortcut}`, bmd);
+        console.log('generated solid for ' + terrain.shortcut);
     }
 
     _blend(from, to, direction) {

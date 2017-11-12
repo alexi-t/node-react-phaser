@@ -7,6 +7,7 @@ import './game.css';
 import tooloud from 'tooloud';
 import { TerrainType } from '../../game/constants';
 import TextureGenerator from '../../game/utils/textureGenerator';
+import LandscapeChunk from '../../game/components/world/landscapeChunk';
 
 class GameComponent extends Component {
     componentDidMount() {
@@ -14,47 +15,51 @@ class GameComponent extends Component {
             {
                 preload: preload,
                 create: create,
+                update: update,
                 render: render2
             });
 
         function preload() {
         }
 
+        var cursors = null;
+
         function create() {
             game.stage.backgroundColor = '#fff';
+            game.world.setBounds(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+
+            cursors = game.input.keyboard.createCursorKeys();
 
             let generator = new TextureGenerator(game);
 
             generator.generateForTerrainTypes(TerrainType, ['NE', 'N', 'NW', 'W', 'SW', 'S', 'SE', 'E']);
 
-            //	Now let's make some sprites using this texture, one every second
-            game.physics.startSystem(Phaser.Physics.ARCADE);
+            let chunk = new LandscapeChunk(-2, -2);
 
-            game.add.sprite(500, 300 - 128, game.cache.getBitmapData('gsNEs'));
-            game.add.sprite(500 - 128, 300 - 128, game.cache.getBitmapData('gsNEg'));
-            game.add.sprite(500, 300, game.cache.getBitmapData('gsNEg'));
+            chunk.draw(game);
 
-            game.add.sprite(500 - 256, 300 - 128, game.cache.getBitmapData('gsNWg'));
-            game.add.sprite(500 - 384, 300 - 128, game.cache.getBitmapData('gsNWs'));
-            game.add.sprite(500 - 384, 300, game.cache.getBitmapData('gsNWg'));
+            game.camera.bounds = null;
+            game.camera.setPosition(0, 0);
+        }
 
-            game.add.sprite(500 - 128, 300 - 256, game.cache.getBitmapData('gsNEs'));
-            game.add.sprite(500 - 256, 300 - 256, game.cache.getBitmapData('gsNWs'));
+        function update() {
+            if (cursors.up.isDown) {
+                game.camera.y -= 4;
+            }
+            else if (cursors.down.isDown) {
+                game.camera.y += 4;
+            }
 
-            game.add.sprite(500 + 128, 300, game.cache.getBitmapData('gsNEs'));
-            game.add.sprite(500 + 128, 300 + 128, game.cache.getBitmapData('gsE'));
-            game.add.sprite(500 + 128, 300 + 256, game.cache.getBitmapData('gsSEs'));
-
-            game.add.sprite(500, 300 + 256, game.cache.getBitmapData('gsSEg'));
-            game.add.sprite(500, 300 + 384, game.cache.getBitmapData('gsSEs'));
-            game.add.sprite(500 - 128, 300 + 384, game.cache.getBitmapData('gsSEg'));
-
-            game.add.sprite(500 - 256, 300 + 256, game.cache.getBitmapData('gsSWg'));
-            game.add.sprite(500 - 384, 300 + 256, game.cache.getBitmapData('gsSWs'));
-            game.add.sprite(500 - 384, 300 + 128, game.cache.getBitmapData('gsSWg'));
+            if (cursors.left.isDown) {
+                game.camera.x -= 4;
+            }
+            else if (cursors.right.isDown) {
+                game.camera.x += 4;
+            }
         }
 
         function render2() {
+            game.debug.cameraInfo(game.camera, 32, 32);
         }
     }
 

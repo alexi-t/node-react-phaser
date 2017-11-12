@@ -33,5 +33,18 @@ export let TerrainType = {
     grass: {
         shortcut: 'g',
         color: Colors.grass
+    },
+    water: {
+        shortcut: 'w',
+        color: Colors.water
+    },
+    swamp: {
+        shortcut: 'm',
+        color: Colors.swamp
+    },
+    ice: {
+        shortcut: 'i',
+        color: Colors.ice
     }
 };
+export const BlockSize = 128;
