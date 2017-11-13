@@ -1,14 +1,15 @@
 import { LandscapeProvider } from './landscapeProvider';
 import { BlockSize } from '../../constants';
+import * as Phaser from 'phaser-ce';
 
-const CHUNK_SIZE = 32;
+const CHUNK_SIZE: number = 32;
 
 class LandscapeChunk {
 
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    private _dirty: boolean;
+    private sprites: any[];
 
+    constructor(public x: number, public y: number) {
         this._dirty = true;
 
         this.sprites = [];
@@ -26,7 +27,7 @@ class LandscapeChunk {
         return this._dirty;
     }
 
-    draw(game) {
+    draw(game: Phaser.Game) {
         var terrain = LandscapeProvider.getTerrainChunk(this.x, this.y, CHUNK_SIZE, CHUNK_SIZE);
         for (var i = 0; i < CHUNK_SIZE; i++) {
             for (var j = 0; j < CHUNK_SIZE; j++) {
