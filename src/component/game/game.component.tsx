@@ -2,16 +2,19 @@ import 'pixi.js';
 import 'p2';
 import 'phaser';
 import * as Phaser from 'phaser-ce';
-import React, { Component } from 'react';
+import * as React from 'react';
 import './game.css';
-import tooloud from 'tooloud';
-import { TerrainType } from '../../game/constants';
+import { TerrainTypes } from '../../game/constants';
 import TextureGenerator from '../../game/utils/textureGenerator';
-import LandscapeChunk from '../../game/components/world/landscapeChunk';
+import { LandscapeChunk, TextureDirections } from '../../game/components/world/landscapeChunk';
+import { LandscapeManager } from '../../game/components/world/landscapeManager';
 
-class GameComponent extends Component {
+class GameComponent extends React.Component {
     componentDidMount() {
-        var game = new Phaser.Game(1000, 800, Phaser.CANVAS, 'gameView',
+        let cursors: Phaser.CursorKeys;
+        let landscapeManager: LandscapeManager = new LandscapeManager();
+
+        var game = new Phaser.Game(1000, 800, Phaser.WEBGL, 'gameView',
             {
                 preload: preload,
                 create: create,
@@ -22,8 +25,6 @@ class GameComponent extends Component {
         function preload() {
         }
 
-        var cursors = null;
-
         function create() {
             game.stage.backgroundColor = '#fff';
             game.world.setBounds(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
@@ -32,30 +33,34 @@ class GameComponent extends Component {
 
             let generator = new TextureGenerator(game);
 
-            generator.generateForTerrainTypes(TerrainType, ['NE', 'N', 'NW', 'W', 'SW', 'S', 'SE', 'E']);
+            generator.generateForTerrainTypes(TerrainTypes, TextureDirections);
 
-            let chunk = new LandscapeChunk(-2, -2);
-
-            chunk.draw(game);
-
-            game.camera.bounds = null;
+            (game.camera as any).bounds = null;
             game.camera.setPosition(0, 0);
+            landscapeManager.renderVisible(game.camera);
         }
 
         function update() {
+            let positionChanged = false;
             if (cursors.up.isDown) {
                 game.camera.y -= 4;
+                positionChanged = true;
             }
             else if (cursors.down.isDown) {
                 game.camera.y += 4;
+                positionChanged = true;
             }
 
             if (cursors.left.isDown) {
                 game.camera.x -= 4;
+                positionChanged = true;
             }
             else if (cursors.right.isDown) {
                 game.camera.x += 4;
+                positionChanged = true;
             }
+            if (positionChanged)
+                landscapeManager.renderVisible(game.camera);
         }
 
         function render2() {

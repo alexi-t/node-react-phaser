@@ -1,4 +1,15 @@
-export let Colors = {
+export interface Color {
+    r: number;
+    g: number;
+    b: number;
+}
+
+export interface TerrainType {
+    shortcut: string;
+    color: Color;
+}
+
+export let Colors: { [key: string]: Color } = {
     water: {
         r: 66,
         g: 173,
@@ -25,7 +36,7 @@ export let Colors = {
         b: 255
     }
 };
-export let TerrainType = {
+export let TerrainTypes: { [key: string]: TerrainType } = {
     sand: {
         shortcut: 's',
         color: Colors.sand
@@ -47,4 +58,4 @@ export let TerrainType = {
         color: Colors.ice
     }
 };
-export const BlockSize = 128;
+export const TextureSize: number = 128;
