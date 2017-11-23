@@ -8,11 +8,13 @@ import { TerrainTypes } from '../../game/constants';
 import TextureGenerator from '../../game/utils/textureGenerator';
 import { LandscapeChunk, TextureDirections } from '../../game/components/world/landscapeChunk';
 import { LandscapeManager } from '../../game/components/world/landscapeManager';
+import { Map } from '../../game/components/world/map';
 
 class GameComponent extends React.Component {
     componentDidMount() {
         let cursors: Phaser.CursorKeys;
         let landscapeManager: LandscapeManager = new LandscapeManager();
+        let map = new Map();
 
         var game = new Phaser.Game(1000, 800, Phaser.WEBGL, 'gameView',
             {
@@ -38,6 +40,7 @@ class GameComponent extends React.Component {
             (game.camera as any).bounds = null;
             game.camera.setPosition(0, 0);
             landscapeManager.renderVisible(game.camera);
+            map.init(game);
         }
 
         function update() {
@@ -60,7 +63,10 @@ class GameComponent extends React.Component {
                 positionChanged = true;
             }
             if (positionChanged)
+            {
                 landscapeManager.renderVisible(game.camera);
+                map.update(game);
+            }
         }
 
         function render2() {
